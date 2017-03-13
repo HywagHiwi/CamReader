@@ -33,8 +33,8 @@ import timestamp.Timestamp;
  */
 public class SaveImage {
 
-	static int mastFehlversuche = 0;
-	static int gelaendeFehlversuche = 0; 
+	static int mastFehlversuche = 1;
+	static int gelaendeFehlversuche = 1; 
 	static String mastUrl = "http://192.168.2.180:1180/cgi-bin/view/image.jpg";
 	static String gelaendeUrl = "http://192.168.2.181/cgi-bin/view/image?pro_1.jpg";
 	static boolean mailMastIstRaus = false;
@@ -104,7 +104,7 @@ private static boolean saveAll(String url, PrintWriter pwriter, GregorianCalenda
 		System.out.println("Das Bild der Kamera fuer " + cam + " konnte nicht ausgelesen werden.");
 		setFehlversuche(cam, 1);
 		System.out.println("Anzahl Fehlversuche: " + Fehlversuche + " (Bei 3 Fehlversuchen in Folge wird eine Mail rausgeschickt.)");
-		if(gesendet == false && Fehlversuche > 3) {
+		if(gesendet == false && Fehlversuche >= 3) {
 			try {				
 				sendMail(cam);
     			return true;
@@ -176,7 +176,7 @@ private static void sendMail(String cam) throws AddressException, MessagingExcep
     for(String s : empfaenger){
     	Mail.send(MailAccounts.TU, s, subject, text);    	
     }
-    System.out.println(subject);
+    System.out.println("Mail versandt: " + "\"" + subject + "\"");
     
 }
 
@@ -197,7 +197,7 @@ private static void setFehlversuche(String cam, int typ) {
 
 private static int addOrReset(int Fehlversuche, int typ) {
 	if(typ == 1) {
-		return Fehlversuche++;
+		return Fehlversuche + 1;
 	} else if (typ == 0) {
 		return Fehlversuche = 0;
 	} else {
